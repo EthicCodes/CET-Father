@@ -1,53 +1,166 @@
 body {
-    font-family: Arial, sans-serif;
-    background-color: #f4f4f4;
+    font-family: 'Roboto', sans-serif;
+    background: linear-gradient(135deg, #1e3c72, #2a5298);
+    color: #333;
     margin: 0;
     padding: 0;
 }
 
+header {
+    position: absolute;
+    top: 10px;
+    left: 20px;
+    font-family: 'Lobster', cursive;  /* Using the fancy font */
+    font-size: 24px;
+    color: #fff;
+}
+
 .container {
-    max-width: 600px;
-    margin: 50px auto;
-    padding: 20px;
-    background-color: #fff;
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+}
+
+.search-card {
+    background-color: #e3f2fd;
+    padding: 40px;
+    border-radius: 8px;
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.5);
+    width: 100%;
+    max-width: 500px;
+    text-align: center;
 }
 
 h1 {
-    text-align: center;
-    color: #333;
+    color: #1e3c72;
+    margin-bottom: 20px;
 }
 
 form {
     display: flex;
     flex-direction: column;
+    align-items: center;
 }
 
 label {
     margin-bottom: 10px;
-    color: #555;
+    color: #333;
 }
 
 input[type="text"] {
     padding: 10px;
     margin-bottom: 20px;
-    border: 1px solid #ccc;
+    border: 1px solid #ced4da;
     border-radius: 4px;
+    width: 100%;
+    max-width: 400px;
+}
+
+.radio-buttons {
+    display: flex;
+    justify-content: center;
+    margin-bottom: 20px;
+}
+
+.radio-buttons label {
+    margin: 0 10px;
 }
 
 button {
-    padding: 10px;
-    background-color: #28a745;
+    padding: 12px 20px;
+    background-color: #ff7043;
     color: white;
     border: none;
     border-radius: 4px;
     cursor: pointer;
+    transition: background-color 0.3s, transform 0.1s;
+    width: 100%;
+    max-width: 200px;
 }
 
 button:hover {
-    background-color: #218838;
+    background-color: #f4511e;
+}
+
+button.clicked {
+    transform: scale(0.95);
 }
 
 #results {
     margin-top: 20px;
+    display: flex;
+    flex-direction: column;
+    align-items: center; /* Centering the result cards */
+}
+
+.result-card {
+    background-color: #2c3e50;
+    border-radius: 8px;
+    padding: 15px;
+    margin: 10px;
+    width: 100%;
+    max-width: 400px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    transition: transform 0.2s, box-shadow 0.2s;
+    text-align: left;
+}
+
+.result-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.3);
+}
+
+.result-card a {
+    color: #3498db;
+    font-weight: bold;
+    text-decoration: none;
+    display: block;
+}
+
+.result-card a:hover {
+    text-decoration: underline;
+}
+
+.result-card p {
+    color: #bdc3c7;
+    margin: 10px 0 0;
+    font-size: 14px;
+}
+
+/* Footer */
+footer {
+    text-align: center;
+    padding: 20px 0;
+    background-color: #1e3c72;
+    color: #f8f9fa;
+    position: fixed;
+    width: 100%;
+    bottom: 0;
+}
+button {
+    padding: 12px 20px;
+    background-color: #ff7043;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background-color 0.3s, transform 0.1s;
+    width: 100%;
+    max-width: 200px;
+    outline: none; /* Removing default focus outline */
+}
+
+button:active {
+    transform: scale(0.95); /* Shrinks the button slightly on click */
+    box-shadow: 0 3px 5px rgba(0, 0, 0, 0.2); /* Adds a subtle shadow effect */
+}
+
+button:focus {
+    outline: none; /* Ensuring there's no outline when the button is focused */
+}
+
+/* Hover effect */
+button:hover {
+    background-color: #f4511e;
 }

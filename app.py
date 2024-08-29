@@ -7,15 +7,17 @@ from college_data import DTE_CODE_TO_COLLEGE  # Importing the dictionary
 
 app = Flask(__name__)
 
-FOLDER_PATH = "clg"  # Constant folder path
+# Constants for folder paths
+FOLDER_PATH = "clg"
+FOLDER_PATH_MUMBAI = "clgmum"
 LOG_FILE = "search_log.txt"  # Log file to save search details
 
-def log_search(query, results):
+def log_search(query, results, region):
     """Logs the search query, results, and timestamp to a file."""
     with open(LOG_FILE, 'a') as log_file:
         timestamp = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
         log_file.write(f"Timestamp: {timestamp}\n")
-        log_file.write(f"Search Query: {query}\n")
+        log_file.write(f"Search Query: {query} | Region: {region}\n")
         if results:
             log_file.write("Results:\n")
             for result in results:
@@ -34,15 +36,15 @@ def search_pdf_for_string(pdf_path, search_string):
             return os.path.basename(pdf_path)
     return None
 
-def search_pdfs_in_folder(search_string, max_workers=8):
+def search_pdfs_in_folder(search_string, folder_path, max_workers=8):
     """Searches for a string in all PDF files within a specified folder using multiprocessing."""
     found_pdfs = []
 
     with ProcessPoolExecutor(max_workers=max_workers) as executor:
         futures = []
-        for filename in os.listdir(FOLDER_PATH):
+        for filename in os.listdir(folder_path):
             if filename.endswith('.pdf'):
-                file_path = os.path.join(FOLDER_PATH, filename)
+                file_path = os.path.join(folder_path, filename)
                 futures.append(executor.submit(search_pdf_for_string, file_path, search_string))
 
         for future in futures:
@@ -65,14 +67,17 @@ def index():
 def search_pdfs():
     data = request.json
     search_string = data.get('search_string')
+    region = data.get('region')
 
     if not search_string:
         return jsonify({"error": "search_string is required"}), 400
 
-    found_pdfs = search_pdfs_in_folder(search_string)
+    # Determine which folder to search based on the selected region
+    folder_path = FOLDER_PATH if region == "all_maharashtra" else FOLDER_PATH_MUMBAI
+    found_pdfs = search_pdfs_in_folder(search_string, folder_path)
 
     # Log the search query and results
-    log_search(search_string, found_pdfs)
+    log_search(search_string, found_pdfs, region)
 
     if found_pdfs:
         results = [{"filename": pdf, "college_name": get_college_name_from_filename(pdf)} for pdf in found_pdfs]
@@ -83,7 +88,9 @@ def search_pdfs():
 @app.route('/pdfs/<filename>')
 def serve_pdf(filename):
     """Serve a specific PDF file."""
-    return send_from_directory(FOLDER_PATH, filename)
+    # Determine the correct folder based on the file name
+    folder_path = FOLDER_PATH if filename.startswith("CAPR-I") else FOLDER_PATH_MUMBAI
+    return send_from_directory(folder_path, filename)
 
 if __name__ == '__main__':
     app.run(host='192.168.0.105', port=5000, debug=True)

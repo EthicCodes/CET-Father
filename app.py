@@ -1,0 +1,89 @@
+from flask import Flask, render_template, request, jsonify, send_from_directory
+import os
+import fitz  # PyMuPDF
+from concurrent.futures import ProcessPoolExecutor
+from datetime import datetime
+from college_data import DTE_CODE_TO_COLLEGE  # Importing the dictionary
+
+app = Flask(__name__)
+
+FOLDER_PATH = "clg"  # Constant folder path
+LOG_FILE = "search_log.txt"  # Log file to save search details
+
+def log_search(query, results):
+    """Logs the search query, results, and timestamp to a file."""
+    with open(LOG_FILE, 'a') as log_file:
+        timestamp = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
+        log_file.write(f"Timestamp: {timestamp}\n")
+        log_file.write(f"Search Query: {query}\n")
+        if results:
+            log_file.write("Results:\n")
+            for result in results:
+                log_file.write(f" - {result}\n")
+        else:
+            log_file.write("Results: No matches found.\n")
+        log_file.write("\n")  # Add an empty line for readability
+
+def search_pdf_for_string(pdf_path, search_string):
+    """Searches for a string in a PDF file."""
+    doc = fitz.open(pdf_path)
+    for page_num in range(len(doc)):
+        page = doc[page_num]
+        text = page.get_text()
+        if search_string.upper() in text.upper():
+            return os.path.basename(pdf_path)
+    return None
+
+def search_pdfs_in_folder(search_string, max_workers=8):
+    """Searches for a string in all PDF files within a specified folder using multiprocessing."""
+    found_pdfs = []
+
+    with ProcessPoolExecutor(max_workers=max_workers) as executor:
+        futures = []
+        for filename in os.listdir(FOLDER_PATH):
+            if filename.endswith('.pdf'):
+                file_path = os.path.join(FOLDER_PATH, filename)
+                futures.append(executor.submit(search_pdf_for_string, file_path, search_string))
+
+        for future in futures:
+            result = future.result()
+            if result:
+                found_pdfs.append(result)
+
+    return found_pdfs
+
+def get_college_name_from_filename(filename):
+    """Extracts the DTE code from the filename and returns the corresponding college name."""
+    dte_code = filename.split('_')[-1].replace('.pdf', '')
+    return DTE_CODE_TO_COLLEGE.get(dte_code, "Unknown College")
+
+@app.route('/')
+def index():
+    return render_template('index.html')
+
+@app.route('/search_pdfs', methods=['POST'])
+def search_pdfs():
+    data = request.json
+    search_string = data.get('search_string')
+
+    if not search_string:
+        return jsonify({"error": "search_string is required"}), 400
+
+    found_pdfs = search_pdfs_in_folder(search_string)
+
+    # Log the search query and results
+    log_search(search_string, found_pdfs)
+
+    if found_pdfs:
+        results = [{"filename": pdf, "college_name": get_college_name_from_filename(pdf)} for pdf in found_pdfs]
+        return jsonify({"found_pdfs": results})
+    else:
+        return jsonify({"message": "String not found in any PDF."})
+
+@app.route('/pdfs/<filename>')
+def serve_pdf(filename):
+    """Serve a specific PDF file."""
+    return send_from_directory(FOLDER_PATH, filename)
+
+if __name__ == '__main__':
+    app.run(host='192.168.0.105', port=5000, debug=True)

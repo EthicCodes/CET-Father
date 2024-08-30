@@ -10,21 +10,19 @@ app = Flask(__name__)
 # Constants for folder paths
 FOLDER_PATH = "clg"
 FOLDER_PATH_MUMBAI = "clgmum"
-LOG_FILE = "search_log.txt"  # Log file to save search details
 
 def log_search(query, results, region):
-    """Logs the search query, results, and timestamp to a file."""
-    with open(LOG_FILE, 'a') as log_file:
-        timestamp = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
-        log_file.write(f"Timestamp: {timestamp}\n")
-        log_file.write(f"Search Query: {query} | Region: {region}\n")
-        if results:
-            log_file.write("Results:\n")
-            for result in results:
-                log_file.write(f" - {result}\n")
-        else:
-            log_file.write("Results: No matches found.\n")
-        log_file.write("\n")  # Add an empty line for readability
+    """Logs the search query, results, and timestamp to the console (captured by Heroku logs)."""
+    timestamp = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
+    print(f"Timestamp: {timestamp}")
+    print(f"Search Query: {query} | Region: {region}")
+    if results:
+        print("Results:")
+        for result in results:
+            print(f" - {result}")
+    else:
+        print("Results: No matches found.")
+    print("\n")  # Add an empty line for readability
 
 def search_pdf_for_string(pdf_path, search_string):
     """Searches for a string in a PDF file."""
@@ -94,4 +92,3 @@ def serve_pdf(filename):
 
 if __name__ == '__main__':
     app.run(debug=True)
-

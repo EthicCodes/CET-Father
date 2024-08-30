@@ -81,7 +81,7 @@ def search_pdfs():
         results = [{"filename": pdf, "college_name": get_college_name_from_filename(pdf)} for pdf in found_pdfs]
         return jsonify({"found_pdfs": results})
     else:
-            return jsonify({"message": "Use the following format, (Lastname Firstname Midname) OR No allotments until CAPR-II})
+            return jsonify({"message": "Use the following format, (Lastname Firstname Midname) OR No allotments until CAPR-II"})
 
 @app.route('/pdfs/<filename>')
 def serve_pdf(filename):

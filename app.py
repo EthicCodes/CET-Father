@@ -4,8 +4,6 @@ import fitz  # PyMuPDF
 from concurrent.futures import ProcessPoolExecutor
 from datetime import datetime
 from college_data import DTE_CODE_TO_COLLEGE  # Importing the dictionary
-import requests
-from bs4 import BeautifulSoup
 
 app = Flask(__name__)
 
@@ -92,39 +90,26 @@ def serve_pdf(filename):
     folder_path = FOLDER_PATH if filename.startswith("CAPR-I") else FOLDER_PATH_MUMBAI
     return send_from_directory(folder_path, filename)
 
-# New API endpoints
+# New API endpoint to search for AppxID in PDFs
 
-@app.route('/api/fetch_data', methods=['POST'])
-def fetch_data():
+@app.route('/api/search_pdf', methods=['POST'])
+def search_pdf():
     data = request.json
-    url = data.get('url')
-    if not url:
-        return jsonify({"error": "URL is required"}), 400
+    appx_id = data.get('appx_id')
+    region = data.get('region', 'all_maharashtra')
 
-    try:
-        response = requests.get(url)
-        response.raise_for_status()
+    if not appx_id:
+        return jsonify({"error": "AppxID is required"}), 400
 
-        soup = BeautifulSoup(response.text, 'html.parser')
-        title = soup.title.string if soup.title else "No title found"
+    # Determine which folder to search based on the selected region
+    folder_path = FOLDER_PATH if region == "all_maharashtra" else FOLDER_PATH_MUMBAI
+    found_pdfs = search_pdfs_in_folder(appx_id, folder_path)
 
-        return jsonify({"title": title, "status": "success"}), 200
-
-    except requests.exceptions.RequestException as e:
-        return jsonify({"error": str(e)}), 500
-
-@app.route('/api/get_college_info', methods=['GET'])
-def get_college_info():
-    college_code = request.args.get('college_code')
-    if not college_code:
-        return jsonify({"error": "College code is required"}), 400
-    
-    college_info = DTE_CODE_TO_COLLEGE.get(college_code.upper())
-    
-    if college_info:
-        return jsonify({"college_name": college_info, "status": "success"}), 200
+    if found_pdfs:
+        results = [{"filename": pdf, "college_name": get_college_name_from_filename(pdf)} for pdf in found_pdfs]
+        return jsonify({"found_pdfs": results})
     else:
-        return jsonify({"error": "College not found"}), 404
+        return jsonify({"message": "No matches found for the provided AppxID."})
 
 if __name__ == '__main__':
     app.run(debug=True)

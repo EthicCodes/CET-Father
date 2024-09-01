@@ -4,6 +4,8 @@ import fitz  # PyMuPDF
 from concurrent.futures import ProcessPoolExecutor
 from datetime import datetime
 from college_data import DTE_CODE_TO_COLLEGE  # Importing the dictionary
+import requests
+from bs4 import BeautifulSoup
 
 app = Flask(__name__)
 
@@ -81,7 +83,7 @@ def search_pdfs():
         results = [{"filename": pdf, "college_name": get_college_name_from_filename(pdf)} for pdf in found_pdfs]
         return jsonify({"found_pdfs": results})
     else:
-            return jsonify({"message": "Use the following format, (Lastname Firstname Midname) OR No allotments until CAPR-II"})
+        return jsonify({"message": "Use the following format, (Lastname Firstname Midname) OR No allotments until CAPR-II"})
 
 @app.route('/pdfs/<filename>')
 def serve_pdf(filename):
@@ -89,6 +91,40 @@ def serve_pdf(filename):
     # Determine the correct folder based on the file name
     folder_path = FOLDER_PATH if filename.startswith("CAPR-I") else FOLDER_PATH_MUMBAI
     return send_from_directory(folder_path, filename)
+
+# New API endpoints
+
+@app.route('/api/fetch_data', methods=['POST'])
+def fetch_data():
+    data = request.json
+    url = data.get('url')
+    if not url:
+        return jsonify({"error": "URL is required"}), 400
+
+    try:
+        response = requests.get(url)
+        response.raise_for_status()
+
+        soup = BeautifulSoup(response.text, 'html.parser')
+        title = soup.title.string if soup.title else "No title found"
+
+        return jsonify({"title": title, "status": "success"}), 200
+
+    except requests.exceptions.RequestException as e:
+        return jsonify({"error": str(e)}), 500
+
+@app.route('/api/get_college_info', methods=['GET'])
+def get_college_info():
+    college_code = request.args.get('college_code')
+    if not college_code:
+        return jsonify({"error": "College code is required"}), 400
+    
+    college_info = DTE_CODE_TO_COLLEGE.get(college_code.upper())
+    
+    if college_info:
+        return jsonify({"college_name": college_info, "status": "success"}), 200
+    else:
+        return jsonify({"error": "College not found"}), 404
 
 if __name__ == '__main__':
     app.run(debug=True)

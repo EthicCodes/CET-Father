@@ -1,22 +1,11 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <!-- Google tag (gtag.js) -->
-    <script async src="https://www.googletagmanager.com/gtag/js?id=G-FE429YTYNG"></script>
-    <script>
-      window.dataLayer = window.dataLayer || [];
-      function gtag(){dataLayer.push(arguments);}
-      gtag('js', new Date());
-
-      gtag('config', 'G-FE429YTYNG');
-    </script>
-<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-2876380604791121"
-     crossorigin="anonymous"></script>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>CET Father</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
-    <link href="https://fonts.googleapis.com/css2?family=Lobster&display=swap" rel="stylesheet"> <!-- Adding fancy font -->
+    <link href="https://fonts.googleapis.com/css2?family=Lobster&display=swap" rel="stylesheet">
     <script src="https://www.google.com/recaptcha/api.js" async defer></script>
 </head>
 <body>
@@ -38,7 +27,7 @@
                     <label><input type="radio" name="location" value="mumbai"> Only Mumbai</label>
                 </div>
 
-                <div class="g-recaptcha" data-sitekey="6LdHxTYqAAAAAOeGPHgAV31M8vAaMLdCaxoFzEr-"></div> <!-- Add reCAPTCHA -->
+                <div class="g-recaptcha" data-sitekey="6LdHxTYqAAAAAOeGPHgAV31M8vAaMLdCaxoFzEr-"></div>
                 <button type="submit">Search</button>
             </form>
             <div id="results"></div>
@@ -48,10 +37,6 @@
     <footer>
         © 2024 EthicCode Technologies Pvt. Ltd. All rights reserved.
     </footer>
-
-    <!-- Audio elements -->
-    <audio id="foundSound" src="{{ url_for('static', filename='found.mp3') }}"></audio>
-    <audio id="notFoundSound" src="{{ url_for('static', filename='notfound.mp3') }}"></audio>
 
     <script>
         document.getElementById('searchForm').addEventListener('submit', async function(e) {
@@ -98,6 +83,7 @@
 
                 // Add Instagram follow line
                 const followUsDiv = document.createElement('div');
+                followUsDiv.className = 'follow-us';
                 followUsDiv.innerHTML = `
                     <p>Follow us on <a href="https://instagram.com/ethiccodetech" target="_blank">
                     <img src="/static/instagram-logo.png" style="width:20px;height:20px;"> Instagram</a></p>`;

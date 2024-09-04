@@ -1,6 +1,17 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+    <!-- Google tag (gtag.js) -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-FE429YTYNG"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+
+      gtag('config', 'G-FE429YTYNG');
+    </script>
+<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-2876380604791121"
+     crossorigin="anonymous"></script>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>CET Father</title>
@@ -18,17 +29,17 @@
     <div class="container">
         <div class="search-card">
             <h1>CET Father</h1>
-            <form id="searchForm" method="POST" action="/search_pdfs">
+            <form id="searchForm">
                 <label for="search_string">Search with Name or EN24:</label>
                 <input type="text" id="search_string" name="search_string" required>
 
                 <div class="radio-buttons">
-                    <label><input type="radio" name="location" value="all" checked> All Maharashtra</label>
+                    <label><input type="radio" name="location" value="all_maharashtra" checked> All Maharashtra</label>
                     <label><input type="radio" name="location" value="mumbai"> Only Mumbai</label>
                 </div>
 
                 <div class="g-recaptcha" data-sitekey="6LdHxTYqAAAAAOeGPHgAV31M8vAaMLdCaxoFzEr-"></div>
-                <button type="submit">Search</button>
+                <button type="submit" id="searchButton">Search</button>
             </form>
             <div id="results"></div>
         </div>
@@ -42,15 +53,9 @@
         document.getElementById('searchForm').addEventListener('submit', async function(e) {
             e.preventDefault();
 
-            const button = document.querySelector('button');
-            button.classList.add('clicked');
-
-            setTimeout(() => {
-                button.classList.remove('clicked');
-            }, 100);
-
             const searchString = document.getElementById('search_string').value;
             const captchaResponse = grecaptcha.getResponse();  // Get the CAPTCHA response
+            const region = document.querySelector('input[name="location"]:checked').value;
 
             const response = await fetch('/search_pdfs', {
                 method: 'POST',
@@ -59,17 +64,17 @@
                 },
                 body: JSON.stringify({
                     search_string: searchString,
-                    captcha_response: captchaResponse
+                    captcha_response: captchaResponse,
+                    region: region
                 })
             });
 
             const result = await response.json();
             const resultDiv = document.getElementById('results');
-            resultDiv.innerHTML = '';
+            resultDiv.innerHTML = ''; // Clear previous results
 
             if (result.found_pdfs) {
                 document.getElementById('foundSound').play();
-
                 result.found_pdfs.forEach(function(item) {
                     const link = document.createElement('a');
                     link.href = `/pdfs/${item.filename}`;
@@ -80,16 +85,7 @@
                     para.appendChild(link);
                     resultDiv.appendChild(para);
                 });
-
-                // Add Instagram follow line
-                const followUsDiv = document.createElement('div');
-                followUsDiv.className = 'follow-us';
-                followUsDiv.innerHTML = `
-                    <p>Follow us on <a href="https://instagram.com/ethiccodetech" target="_blank">
-                    <img src="/static/instagram-logo.png" style="width:20px;height:20px;"> Instagram</a></p>`;
-                resultDiv.appendChild(followUsDiv);
             } else {
-                document.getElementById('notFoundSound').play();
                 const para = document.createElement('p');
                 para.textContent = result.message || 'An error occurred.';
                 resultDiv.appendChild(para);

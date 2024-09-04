@@ -1,21 +1,16 @@
-/* General body styling */
 body {
     font-family: 'Roboto', sans-serif;
     background: linear-gradient(135deg, #1e3c72, #2a5298);
     color: #333;
     margin: 0;
     padding: 0;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    height: 100vh;
 }
 
 header {
     position: absolute;
     top: 10px;
     left: 20px;
-    font-family: 'Lobster', cursive;
+    font-family: 'Lobster', cursive;  /* Using the fancy font */
     font-size: 24px;
     color: #fff;
 }
@@ -24,7 +19,7 @@ header {
     display: flex;
     justify-content: center;
     align-items: center;
-    height: 100%;
+    height: 100vh;
 }
 
 .search-card {
@@ -82,15 +77,21 @@ button {
     transition: background-color 0.3s, transform 0.1s;
     width: 100%;
     max-width: 200px;
-    margin-top: 10px; /* Added margin for extra space between CAPTCHA and search button */
 }
 
 button:hover {
     background-color: #f4511e;
 }
 
+button.clicked {
+    transform: scale(0.95);
+}
+
 #results {
     margin-top: 20px;
+    display: flex;
+    flex-direction: column;
+    align-items: center; /* Centering the result cards */
 }
 
 .result-card {
@@ -100,31 +101,31 @@ button:hover {
     margin: 10px;
     width: 100%;
     max-width: 400px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    transition: transform 0.2s, box-shadow 0.2s;
     text-align: left;
+}
+
+.result-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.3);
 }
 
 .result-card a {
     color: #3498db;
     font-weight: bold;
     text-decoration: none;
+    display: block;
+}
+
+.result-card a:hover {
+    text-decoration: underline;
 }
 
 .result-card p {
     color: #bdc3c7;
     margin: 10px 0 0;
     font-size: 14px;
-}
-
-.follow-us {
-    margin-top: 20px;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-}
-
-.follow-us img {
-    margin-right: 8px;
-    vertical-align: middle;
 }
 
 /* Footer */
@@ -136,4 +137,30 @@ footer {
     position: fixed;
     width: 100%;
     bottom: 0;
+}
+button {
+    padding: 12px 20px;
+    background-color: #ff7043;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background-color 0.3s, transform 0.1s;
+    width: 100%;
+    max-width: 200px;
+    outline: none; /* Removing default focus outline */
+}
+
+button:active {
+    transform: scale(0.95); /* Shrinks the button slightly on click */
+    box-shadow: 0 3px 5px rgba(0, 0, 0, 0.2); /* Adds a subtle shadow effect */
+}
+
+button:focus {
+    outline: none; /* Ensuring there's no outline when the button is focused */
+}
+
+/* Hover effect */
+button:hover {
+    background-color: #f4511e;
 }

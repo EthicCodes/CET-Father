@@ -10,8 +10,6 @@
 
       gtag('config', 'G-FE429YTYNG');
     </script>
-<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-2876380604791121"
-     crossorigin="anonymous"></script>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>CET Father</title>
@@ -57,6 +55,10 @@
             const captchaResponse = grecaptcha.getResponse();  // Get the CAPTCHA response
             const region = document.querySelector('input[name="location"]:checked').value;
 
+            console.log('Search String:', searchString); // Debug log
+            console.log('Region:', region);             // Debug log
+            console.log('CAPTCHA Response:', captchaResponse);  // Debug log
+
             const response = await fetch('/search_pdfs', {
                 method: 'POST',
                 headers: {
@@ -70,11 +72,12 @@
             });
 
             const result = await response.json();
+            console.log('API Response:', result); // Debug log for API response
+
             const resultDiv = document.getElementById('results');
             resultDiv.innerHTML = ''; // Clear previous results
 
             if (result.found_pdfs) {
-                document.getElementById('foundSound').play();
                 result.found_pdfs.forEach(function(item) {
                     const link = document.createElement('a');
                     link.href = `/pdfs/${item.filename}`;

@@ -1,9 +1,14 @@
+/* General body styling */
 body {
     font-family: 'Roboto', sans-serif;
     background: linear-gradient(135deg, #1e3c72, #2a5298);
     color: #333;
     margin: 0;
     padding: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
 }
 
 header {
@@ -19,7 +24,7 @@ header {
     display: flex;
     justify-content: center;
     align-items: center;
-    height: 100vh;
+    height: 100%;
 }
 
 .search-card {
@@ -63,6 +68,10 @@ input[type="text"] {
     margin-bottom: 20px;
 }
 
+.radio-buttons label {
+    margin: 0 10px;
+}
+
 button {
     padding: 12px 20px;
     background-color: #ff7043;
@@ -73,6 +82,7 @@ button {
     transition: background-color 0.3s, transform 0.1s;
     width: 100%;
     max-width: 200px;
+    margin-top: 10px; /* Added margin for extra space between CAPTCHA and search button */
 }
 
 button:hover {
@@ -105,6 +115,18 @@ button:hover {
     font-size: 14px;
 }
 
+.follow-us {
+    margin-top: 20px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.follow-us img {
+    margin-right: 8px;
+    vertical-align: middle;
+}
+
 /* Footer */
 footer {
     text-align: center;
@@ -114,8 +136,4 @@ footer {
     position: fixed;
     width: 100%;
     bottom: 0;
-}
-
-.follow-us {
-    margin-top: 20px;
 }

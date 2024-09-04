@@ -17,6 +17,7 @@
     <title>CET Father</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
     <link href="https://fonts.googleapis.com/css2?family=Lobster&display=swap" rel="stylesheet"> <!-- Adding fancy font -->
+    <script src="https://www.google.com/recaptcha/api.js" async defer></script>
 </head>
 <body>
     <header>
@@ -37,6 +38,7 @@
                     <label><input type="radio" name="location" value="mumbai"> Only Mumbai</label>
                 </div>
 
+                <div class="g-recaptcha" data-sitekey="6LdHxTYqAAAAAOeGPHgAV31M8vAaMLdCaxoFzEr-"></div> <!-- Add reCAPTCHA -->
                 <button type="submit">Search</button>
             </form>
             <div id="results"></div>
@@ -63,13 +65,16 @@
             }, 100);
 
             const searchString = document.getElementById('search_string').value;
+            const captchaResponse = grecaptcha.getResponse();  // Get the CAPTCHA response
+
             const response = await fetch('/search_pdfs', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json'
                 },
                 body: JSON.stringify({
-                    search_string: searchString
+                    search_string: searchString,
+                    captcha_response: captchaResponse
                 })
             });
 
@@ -78,23 +83,27 @@
             resultDiv.innerHTML = '';
 
             if (result.found_pdfs) {
-                // Play the found sound
                 document.getElementById('foundSound').play();
 
                 result.found_pdfs.forEach(function(item) {
                     const link = document.createElement('a');
                     link.href = `/pdfs/${item.filename}`;
                     link.textContent = `${item.filename} - ${item.college_name}`;
-                    link.target = "_blank";  // Opens the PDF in a new tab
+                    link.target = "_blank";
                     const para = document.createElement('p');
-                    para.className = 'result-card';  // Adding the result-card class for styling
+                    para.className = 'result-card';
                     para.appendChild(link);
                     resultDiv.appendChild(para);
                 });
-            } else {
-                // Play the not found sound
-                document.getElementById('notFoundSound').play();
 
+                // Add Instagram follow line
+                const followUsDiv = document.createElement('div');
+                followUsDiv.innerHTML = `
+                    <p>Follow us on <a href="https://instagram.com/ethiccodetech" target="_blank">
+                    <img src="/static/instagram-logo.png" style="width:20px;height:20px;"> Instagram</a></p>`;
+                resultDiv.appendChild(followUsDiv);
+            } else {
+                document.getElementById('notFoundSound').play();
                 const para = document.createElement('p');
                 para.textContent = result.message || 'An error occurred.';
                 resultDiv.appendChild(para);

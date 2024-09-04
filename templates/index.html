@@ -10,12 +10,13 @@
 
       gtag('config', 'G-FE429YTYNG');
     </script>
+<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-2876380604791121"
+     crossorigin="anonymous"></script>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>CET Father</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
-    <link href="https://fonts.googleapis.com/css2?family=Lobster&display=swap" rel="stylesheet">
-    <script src="https://www.google.com/recaptcha/api.js" async defer></script>
+    <link href="https://fonts.googleapis.com/css2?family=Lobster&display=swap" rel="stylesheet"> <!-- Adding fancy font -->
 </head>
 <body>
     <header>
@@ -27,17 +28,16 @@
     <div class="container">
         <div class="search-card">
             <h1>CET Father</h1>
-            <form id="searchForm">
+            <form id="searchForm" method="POST" action="/search_pdfs">
                 <label for="search_string">Search with Name or EN24:</label>
                 <input type="text" id="search_string" name="search_string" required>
 
                 <div class="radio-buttons">
-                    <label><input type="radio" name="location" value="all_maharashtra" checked> All Maharashtra</label>
+                    <label><input type="radio" name="location" value="all" checked> All Maharashtra</label>
                     <label><input type="radio" name="location" value="mumbai"> Only Mumbai</label>
                 </div>
 
-                <div class="g-recaptcha" data-sitekey="6LdHxTYqAAAAAOeGPHgAV31M8vAaMLdCaxoFzEr-"></div>
-                <button type="submit" id="searchButton">Search</button>
+                <button type="submit">Search</button>
             </form>
             <div id="results"></div>
         </div>
@@ -47,48 +47,54 @@
         © 2024 EthicCode Technologies Pvt. Ltd. All rights reserved.
     </footer>
 
+    <!-- Audio elements -->
+    <audio id="foundSound" src="{{ url_for('static', filename='found.mp3') }}"></audio>
+    <audio id="notFoundSound" src="{{ url_for('static', filename='notfound.mp3') }}"></audio>
+
     <script>
         document.getElementById('searchForm').addEventListener('submit', async function(e) {
             e.preventDefault();
 
+            const button = document.querySelector('button');
+            button.classList.add('clicked');
+
+            setTimeout(() => {
+                button.classList.remove('clicked');
+            }, 100);
+
             const searchString = document.getElementById('search_string').value;
-            const captchaResponse = grecaptcha.getResponse();  // Get the CAPTCHA response
-            const region = document.querySelector('input[name="location"]:checked').value;
-
-            console.log('Search String:', searchString); // Debug log
-            console.log('Region:', region);             // Debug log
-            console.log('CAPTCHA Response:', captchaResponse);  // Debug log
-
             const response = await fetch('/search_pdfs', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json'
                 },
                 body: JSON.stringify({
-                    search_string: searchString,
-                    captcha_response: captchaResponse,
-                    region: region
+                    search_string: searchString
                 })
             });
 
             const result = await response.json();
-            console.log('API Response:', result); // Debug log for API response
-
             const resultDiv = document.getElementById('results');
-            resultDiv.innerHTML = ''; // Clear previous results
+            resultDiv.innerHTML = '';
 
             if (result.found_pdfs) {
+                // Play the found sound
+                document.getElementById('foundSound').play();
+
                 result.found_pdfs.forEach(function(item) {
                     const link = document.createElement('a');
-                    link.href = `/pdfs/${item.filename}`;
-                    link.textContent = `${item.filename} - ${item.college_name}`;
-                    link.target = "_blank";
+                    link.href = /pdfs/${item.filename};
+                    link.textContent = ${item.filename} - ${item.college_name};
+                    link.target = "_blank";  // Opens the PDF in a new tab
                     const para = document.createElement('p');
-                    para.className = 'result-card';
+                    para.className = 'result-card';  // Adding the result-card class for styling
                     para.appendChild(link);
                     resultDiv.appendChild(para);
                 });
             } else {
+                // Play the not found sound
+                document.getElementById('notFoundSound').play();
+
                 const para = document.createElement('p');
                 para.textContent = result.message || 'An error occurred.';
                 resultDiv.appendChild(para);

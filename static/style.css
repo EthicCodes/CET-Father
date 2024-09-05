@@ -1,7 +1,7 @@
 /* Basic body style */
 body {
     font-family: 'Roboto', sans-serif;
-    background: radial-gradient(circle at top left, #ff9a9e, #fad0c4, #fad0c4, #ff9a9e);
+    background: linear-gradient(135deg, #1c1c1c, #0d0d0d);
     color: #fff;
     margin: 0;
     padding: 0;
@@ -14,7 +14,7 @@ header {
     left: 40px;
     font-family: 'Lobster', cursive;
     font-size: 40px;
-    color: #ff6f61;
+    color: #ff0080;
     animation: bounce-in 2s ease-out;
 }
 
@@ -32,27 +32,29 @@ header {
 }
 
 .search-card {
-    background: linear-gradient(145deg, #ffe6fa, #ffd1dc);
+    background: linear-gradient(145deg, #2a2a72, #009ffd);
     padding: 50px;
     border-radius: 30px;
-    box-shadow: 0 20px 50px rgba(0, 0, 0, 0.3);
+    box-shadow: 0 20px 80px rgba(0, 0, 0, 0.7);
     text-align: center;
     width: 100%;
-    max-width: 600px;
+    max-width: 700px;
     transition: all 0.5s ease;
+    transform: scale(1);
 }
 
 .search-card:hover {
-    transform: translateY(-20px) scale(1.05);
-    box-shadow: 0 30px 70px rgba(0, 0, 0, 0.5);
+    transform: translateY(-20px) scale(1.1);
+    box-shadow: 0 30px 100px rgba(0, 0, 0, 1);
 }
 
 h1 {
-    color: #ff6f61;
+    color: #ff0080;
     margin-bottom: 30px;
-    font-size: 36px;
-    font-weight: 700;
-    letter-spacing: 1px;
+    font-size: 48px;
+    font-weight: 900;
+    letter-spacing: 2px;
+    text-shadow: 4px 4px 10px rgba(255, 0, 128, 0.6);
     position: relative;
     animation: fade-in 2s ease-in;
 }
@@ -65,24 +67,30 @@ form {
 
 label {
     margin-bottom: 15px;
-    color: #444;
+    color: #fff;
     font-weight: bold;
-    font-size: 18px;
+    font-size: 22px;
+    text-shadow: 1px 1px 5px rgba(0, 0, 0, 0.7);
 }
 
 input[type="text"] {
     padding: 15px;
     margin-bottom: 20px;
-    border: 2px solid #ff6f61;
+    border: 2px solid #ff0080;
     border-radius: 50px;
+    background: rgba(255, 255, 255, 0.1);
+    color: #fff;
     width: 100%;
-    max-width: 450px;
-    transition: border 0.3s ease;
+    max-width: 550px;
+    font-size: 18px;
+    transition: border 0.3s ease, box-shadow 0.3s ease;
     outline: none;
+    box-shadow: 0 0 10px rgba(255, 0, 128, 0.7);
 }
 
 input[type="text"]:focus {
     border-color: #ff4f81;
+    box-shadow: 0 0 20px rgba(255, 0, 128, 1);
 }
 
 .radio-buttons {
@@ -94,33 +102,36 @@ input[type="text"]:focus {
 .radio-buttons label {
     margin: 0 20px;
     font-weight: 600;
-    color: #555;
-    font-size: 16px;
+    color: #fff;
+    font-size: 18px;
+    text-shadow: 1px 1px 5px rgba(0, 0, 0, 0.7);
 }
 
 button {
     padding: 15px 40px;
-    background-color: #ff6f61;
+    background-color: #ff0080;
     color: white;
     border: none;
     border-radius: 50px;
-    cursor: pointer;
-    font-size: 16px;
+    font-size: 18px;
     font-weight: bold;
+    box-shadow: 0 0 20px rgba(255, 0, 128, 0.7);
     transition: all 0.4s ease;
     width: 100%;
     max-width: 250px;
     position: relative;
+    transform: scale(1);
 }
 
 button:hover {
     background-color: #ff4f81;
-    transform: translateY(-5px) scale(1.05);
+    box-shadow: 0 0 30px rgba(255, 0, 128, 1);
+    transform: scale(1.1) translateY(-5px);
 }
 
 button:active {
     transform: scale(0.95);
-    background-color: #ff2b56;
+    background-color: #ff1f56;
 }
 
 #results {
@@ -131,41 +142,47 @@ button:active {
 }
 
 .result-card {
-    background: linear-gradient(135deg, #ff9a9e, #fad0c4);
-    border-radius: 20px;
+    background: linear-gradient(145deg, #ff0080, #ff4f81);
+    border-radius: 25px;
     padding: 20px;
     margin: 15px;
     width: 100%;
-    max-width: 450px;
+    max-width: 550px;
     color: white;
-    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3);
+    box-shadow: 0 20px 50px rgba(255, 0, 128, 0.7);
     text-align: center;
-    animation: fade-in-up 1s ease-in-out;
+    animation: glow-in 1s ease-in-out;
+}
+
+.result-card:hover {
+    box-shadow: 0 20px 60px rgba(255, 0, 128, 1);
+    transform: scale(1.05);
 }
 
 .result-card a {
-    color: #4bcffa;
+    color: #00f0ff;
     font-weight: bold;
+    font-size: 20px;
     text-decoration: none;
-    font-size: 16px;
-    transition: color 0.3s ease;
+    text-shadow: 2px 2px 5px rgba(0, 240, 255, 0.7);
+    transition: color 0.3s ease, text-shadow 0.3s ease;
 }
 
 .result-card a:hover {
-    color: #1e90ff;
-    text-decoration: underline;
+    color: #00e5ff;
+    text-shadow: 4px 4px 10px rgba(0, 240, 255, 1);
 }
 
 footer {
     text-align: center;
     padding: 20px 0;
-    background-color: #ff6f61;
+    background-color: #1c1c1c;
     color: #f8f9fa;
     position: fixed;
     width: 100%;
     bottom: 0;
-    font-size: 14px;
-    animation: slide-up 1s ease;
+    font-size: 16px;
+    box-shadow: 0 -10px 30px rgba(0, 0, 0, 0.8);
 }
 
 footer p {
@@ -173,7 +190,7 @@ footer p {
 }
 
 footer small {
-    color: #ccc;
+    color: #aaa;
 }
 
 .instagram-icon {
@@ -195,17 +212,6 @@ footer small {
     }
 }
 
-@keyframes fade-in-up {
-    0% {
-        opacity: 0;
-        transform: translateY(50px);
-    }
-    100% {
-        opacity: 1;
-        transform: translateY(0);
-    }
-}
-
 @keyframes bounce-in {
     0% {
         opacity: 0;
@@ -220,13 +226,13 @@ footer small {
     }
 }
 
-@keyframes slide-up {
+@keyframes glow-in {
     0% {
         opacity: 0;
-        transform: translateY(50px);
+        box-shadow: 0 0 0 rgba(255, 0, 128, 0);
     }
     100% {
         opacity: 1;
-        transform: translateY(0);
+        box-shadow: 0 20px 50px rgba(255, 0, 128, 0.7);
     }
 }

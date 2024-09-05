@@ -11,6 +11,7 @@ app.secret_key = 'super-secret-key'  # Set a secret key for sessions
 
 # Constants for folder paths
 FOLDER_PATH = "clg"
+FOLDER_PATH_2 = "clg2"  # Additional folder for "all_maharashtra"
 FOLDER_PATH_MUMBAI = "clgmum"
 
 def log_search(query, results, region):
@@ -36,16 +37,17 @@ def search_pdf_for_string(pdf_path, search_string):
             return os.path.basename(pdf_path)
     return None
 
-def search_pdfs_in_folder(search_string, folder_path, max_workers=8):
-    """Searches for a string in all PDF files within a specified folder using multiprocessing."""
+def search_pdfs_in_multiple_folders(search_string, folder_paths, max_workers=8):
+    """Searches for a string in all PDF files within the specified folders using multiprocessing."""
     found_pdfs = []
 
     with ProcessPoolExecutor(max_workers=max_workers) as executor:
         futures = []
-        for filename in os.listdir(folder_path):
-            if filename.endswith('.pdf'):
-                file_path = os.path.join(folder_path, filename)
-                futures.append(executor.submit(search_pdf_for_string, file_path, search_string))
+        for folder_path in folder_paths:
+            for filename in os.listdir(folder_path):
+                if filename.endswith('.pdf'):
+                    file_path = os.path.join(folder_path, filename)
+                    futures.append(executor.submit(search_pdf_for_string, file_path, search_string))
         for future in futures:
             result = future.result()
             if result:
@@ -94,9 +96,13 @@ def search_pdfs():
     else:
         session['search_count'] = 0  # Reset after 10 successful searches
 
-    # Determine which folder to search based on the selected region
-    folder_path = FOLDER_PATH if region == "all_maharashtra" else FOLDER_PATH_MUMBAI
-    found_pdfs = search_pdfs_in_folder(search_string, folder_path)
+    # Determine which folders to search based on the selected region
+    if region == "all_maharashtra":
+        folder_paths = [FOLDER_PATH, FOLDER_PATH_2]  # Search both clg and clg2 folders
+    else:
+        folder_paths = [FOLDER_PATH_MUMBAI]  # Search only in clgmum for Mumbai region
+
+    found_pdfs = search_pdfs_in_multiple_folders(search_string, folder_paths)
 
     # Log the search query and results
     log_search(search_string, found_pdfs, region)
@@ -124,8 +130,8 @@ def search_pdf():
         return jsonify({"error": "AppxID is required"}), 400
 
     # Determine which folder to search based on the selected region
-    folder_path = FOLDER_PATH if region == "all_maharashtra" else FOLDER_PATH_MUMBAI
-    found_pdfs = search_pdfs_in_folder(appx_id, folder_path)
+    folder_paths = [FOLDER_PATH, FOLDER_PATH_2] if region == "all_maharashtra" else [FOLDER_PATH_MUMBAI]
+    found_pdfs = search_pdfs_in_multiple_folders(appx_id, folder_paths)
 
     if found_pdfs:
         results = [{"filename": pdf, "college_name": get_college_name_from_filename(pdf)} for pdf in found_pdfs]
@@ -134,4 +140,4 @@ def search_pdf():
         return jsonify({"message": "No matches found for the provided AppxID."})
 
 if __name__ == '__main__':
-    app.run(debug=True)
+    app.run(debug=False)

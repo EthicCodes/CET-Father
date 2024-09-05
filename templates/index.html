@@ -41,6 +41,7 @@
                 <img class="instagram-icon" src="{{ url_for('static', filename='instagram-logo.png') }}" alt="Instagram Logo">
             </a>
         </p>
+        <small>v2.0</small>
     </footer>
 
     <script>
@@ -51,7 +52,6 @@
             const captchaResponse = grecaptcha.getResponse();  // Get the CAPTCHA response
             const region = document.querySelector('input[name="location"]:checked').value;
 
-            // Check if CAPTCHA is completed
             if (!captchaResponse) {
                 alert("Please complete the CAPTCHA.");
                 return;
@@ -90,8 +90,7 @@
                 resultDiv.appendChild(para);
             }
 
-            // Reset CAPTCHA after search
-            grecaptcha.reset();
+            grecaptcha.reset();  // Reset CAPTCHA after search
         });
     </script>
 </body>

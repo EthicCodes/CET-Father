@@ -1,17 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <!-- Google tag (gtag.js) -->
-    <script async src="https://www.googletagmanager.com/gtag/js?id=G-FE429YTYNG"></script>
-    <script>
-      window.dataLayer = window.dataLayer || [];
-      function gtag(){dataLayer.push(arguments);}
-      gtag('js', new Date());
-
-      gtag('config', 'G-FE429YTYNG');
-    </script>
-<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-2876380604791121"
-     crossorigin="anonymous"></script>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>CET Father</title>
@@ -83,8 +72,8 @@
 
                 result.found_pdfs.forEach(function(item) {
                     const link = document.createElement('a');
-                    link.href = /pdfs/${item.filename};
-                    link.textContent = ${item.filename} - ${item.college_name};
+                    link.href = `/pdfs/${item.filename}`;
+                    link.textContent = `${item.filename} - ${item.college_name}`;
                     link.target = "_blank";  // Opens the PDF in a new tab
                     const para = document.createElement('p');
                     para.className = 'result-card';  // Adding the result-card class for styling

@@ -60,7 +60,7 @@ def get_college_name_from_filename(filename):
 
 def verify_captcha(response):
     """Verifies the CAPTCHA response from the client."""
-    secret = 'your-secret-key'  # Replace with your actual reCAPTCHA secret key
+    secret = '6LdHxTYqAAAAAK3qHhidLqX9YPrxR3MjYHJOqrtq'  # Replace with your actual reCAPTCHA secret key
     payload = {
         'secret': secret,
         'response': response

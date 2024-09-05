@@ -4,7 +4,7 @@ import fitz  # PyMuPDF
 from concurrent.futures import ProcessPoolExecutor
 from datetime import datetime
 import requests
-from college_data import DTE_CODE_TO_COLLEGE
+from college_data import DTE_CODE_TO_COLLEGE  # Importing the dictionary
 
 app = Flask(__name__)
 app.secret_key = 'super-secret-key'  # Set a secret key for sessions
@@ -14,7 +14,7 @@ FOLDER_PATH = "clg"
 FOLDER_PATH_MUMBAI = "clgmum"
 
 def log_search(query, results, region):
-    """Logs the search query, results, and timestamp."""
+    """Logs the search query, results, and timestamp to the console (captured by Heroku logs)."""
     timestamp = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
     print(f"Timestamp: {timestamp}")
     print(f"Search Query: {query} | Region: {region}")
@@ -39,6 +39,7 @@ def search_pdf_for_string(pdf_path, search_string):
 def search_pdfs_in_folder(search_string, folder_path, max_workers=8):
     """Searches for a string in all PDF files within a specified folder using multiprocessing."""
     found_pdfs = []
+
     with ProcessPoolExecutor(max_workers=max_workers) as executor:
         futures = []
         for filename in os.listdir(folder_path):
@@ -49,6 +50,7 @@ def search_pdfs_in_folder(search_string, folder_path, max_workers=8):
             result = future.result()
             if result:
                 found_pdfs.append(result)
+
     return found_pdfs
 
 def get_college_name_from_filename(filename):
@@ -57,8 +59,8 @@ def get_college_name_from_filename(filename):
     return DTE_CODE_TO_COLLEGE.get(dte_code, "Unknown College")
 
 def verify_captcha(response):
-    """Verifies the CAPTCHA response."""
-    secret = 'your-secret-key'  # Replace with your reCAPTCHA secret key
+    """Verifies the CAPTCHA response from the client."""
+    secret = 'your-secret-key'  # Replace with your actual reCAPTCHA secret key
     payload = {
         'secret': secret,
         'response': response
@@ -103,7 +105,7 @@ def search_pdfs():
         results = [{"filename": pdf, "college_name": get_college_name_from_filename(pdf)} for pdf in found_pdfs]
         return jsonify({"found_pdfs": results})
     else:
-        return jsonify({"message": "No matches found."})
+        return jsonify({"message": "Use the following format, (Lastname Firstname Midname) OR No allotments until CAPR-II"})
 
 @app.route('/pdfs/<filename>')
 def serve_pdf(filename):
@@ -121,6 +123,7 @@ def search_pdf():
     if not appx_id:
         return jsonify({"error": "AppxID is required"}), 400
 
+    # Determine which folder to search based on the selected region
     folder_path = FOLDER_PATH if region == "all_maharashtra" else FOLDER_PATH_MUMBAI
     found_pdfs = search_pdfs_in_folder(appx_id, folder_path)
 

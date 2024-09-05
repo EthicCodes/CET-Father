@@ -10,10 +10,10 @@ body {
 
 header {
     position: absolute;
-    top: 30px;
-    left: 40px;
+    top: 20px; /* Reduced spacing */
+    left: 30px;
     font-family: 'Lobster', cursive;
-    font-size: 40px;
+    font-size: 32px; /* Reduced font size */
     color: #ff0080;
     animation: bounce-in 2s ease-out;
 }
@@ -22,7 +22,7 @@ header {
     display: flex;
     justify-content: center;
     align-items: center;
-    height: 100vh;
+    height: 90vh; /* Reduced height to bring content closer */
     transform: perspective(600px) rotateX(10deg);
     transition: transform 0.5s ease-in-out;
 }
@@ -33,28 +33,28 @@ header {
 
 .search-card {
     background: linear-gradient(145deg, #2a2a72, #009ffd);
-    padding: 50px;
-    border-radius: 30px;
-    box-shadow: 0 20px 80px rgba(0, 0, 0, 0.7);
+    padding: 30px; /* Reduced padding */
+    border-radius: 20px; /* Reduced border-radius */
+    box-shadow: 0 15px 50px rgba(0, 0, 0, 0.7);
     text-align: center;
     width: 100%;
-    max-width: 700px;
+    max-width: 500px; /* Reduced max-width */
     transition: all 0.5s ease;
     transform: scale(1);
 }
 
 .search-card:hover {
-    transform: translateY(-20px) scale(1.1);
-    box-shadow: 0 30px 100px rgba(0, 0, 0, 1);
+    transform: translateY(-10px) scale(1.05); /* Reduced hover effect */
+    box-shadow: 0 25px 80px rgba(0, 0, 0, 1);
 }
 
 h1 {
     color: #ff0080;
-    margin-bottom: 30px;
-    font-size: 48px;
+    margin-bottom: 20px; /* Reduced margin */
+    font-size: 36px; /* Reduced font size */
     font-weight: 900;
-    letter-spacing: 2px;
-    text-shadow: 4px 4px 10px rgba(255, 0, 128, 0.6);
+    letter-spacing: 1.5px;
+    text-shadow: 3px 3px 8px rgba(255, 0, 128, 0.6);
     position: relative;
     animation: fade-in 2s ease-in;
 }
@@ -66,67 +66,67 @@ form {
 }
 
 label {
-    margin-bottom: 15px;
+    margin-bottom: 10px; /* Reduced margin */
     color: #fff;
     font-weight: bold;
-    font-size: 22px;
+    font-size: 18px; /* Reduced font size */
     text-shadow: 1px 1px 5px rgba(0, 0, 0, 0.7);
 }
 
 input[type="text"] {
-    padding: 15px;
-    margin-bottom: 20px;
+    padding: 10px; /* Reduced padding */
+    margin-bottom: 15px; /* Reduced margin */
     border: 2px solid #ff0080;
-    border-radius: 50px;
+    border-radius: 30px; /* Reduced border-radius */
     background: rgba(255, 255, 255, 0.1);
     color: #fff;
     width: 100%;
-    max-width: 550px;
-    font-size: 18px;
+    max-width: 400px; /* Reduced max-width */
+    font-size: 16px; /* Reduced font size */
     transition: border 0.3s ease, box-shadow 0.3s ease;
     outline: none;
-    box-shadow: 0 0 10px rgba(255, 0, 128, 0.7);
+    box-shadow: 0 0 8px rgba(255, 0, 128, 0.7);
 }
 
 input[type="text"]:focus {
     border-color: #ff4f81;
-    box-shadow: 0 0 20px rgba(255, 0, 128, 1);
+    box-shadow: 0 0 15px rgba(255, 0, 128, 1);
 }
 
 .radio-buttons {
     display: flex;
     justify-content: center;
-    margin-bottom: 20px;
+    margin-bottom: 15px; /* Reduced margin */
 }
 
 .radio-buttons label {
-    margin: 0 20px;
+    margin: 0 15px; /* Reduced margin */
     font-weight: 600;
     color: #fff;
-    font-size: 18px;
+    font-size: 16px; /* Reduced font size */
     text-shadow: 1px 1px 5px rgba(0, 0, 0, 0.7);
 }
 
 button {
-    padding: 15px 40px;
+    padding: 10px 30px; /* Reduced padding */
     background-color: #ff0080;
     color: white;
     border: none;
-    border-radius: 50px;
-    font-size: 18px;
+    border-radius: 30px; /* Reduced border-radius */
+    font-size: 16px; /* Reduced font size */
     font-weight: bold;
-    box-shadow: 0 0 20px rgba(255, 0, 128, 0.7);
+    box-shadow: 0 0 15px rgba(255, 0, 128, 0.7);
     transition: all 0.4s ease;
     width: 100%;
-    max-width: 250px;
+    max-width: 200px; /* Reduced max-width */
     position: relative;
     transform: scale(1);
 }
 
 button:hover {
     background-color: #ff4f81;
-    box-shadow: 0 0 30px rgba(255, 0, 128, 1);
-    transform: scale(1.1) translateY(-5px);
+    box-shadow: 0 0 20px rgba(255, 0, 128, 1);
+    transform: scale(1.05);
 }
 
 button:active {
@@ -135,7 +135,7 @@ button:active {
 }
 
 #results {
-    margin-top: 30px;
+    margin-top: 20px; /* Reduced margin */
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -143,26 +143,26 @@ button:active {
 
 .result-card {
     background: linear-gradient(145deg, #ff0080, #ff4f81);
-    border-radius: 25px;
-    padding: 20px;
-    margin: 15px;
+    border-radius: 20px; /* Reduced border-radius */
+    padding: 15px; /* Reduced padding */
+    margin: 10px; /* Reduced margin */
     width: 100%;
-    max-width: 550px;
+    max-width: 450px; /* Reduced max-width */
     color: white;
-    box-shadow: 0 20px 50px rgba(255, 0, 128, 0.7);
+    box-shadow: 0 15px 40px rgba(255, 0, 128, 0.7);
     text-align: center;
     animation: glow-in 1s ease-in-out;
 }
 
 .result-card:hover {
-    box-shadow: 0 20px 60px rgba(255, 0, 128, 1);
+    box-shadow: 0 15px 50px rgba(255, 0, 128, 1);
     transform: scale(1.05);
 }
 
 .result-card a {
     color: #00f0ff;
     font-weight: bold;
-    font-size: 20px;
+    font-size: 16px; /* Reduced font size */
     text-decoration: none;
     text-shadow: 2px 2px 5px rgba(0, 240, 255, 0.7);
     transition: color 0.3s ease, text-shadow 0.3s ease;
@@ -175,18 +175,18 @@ button:active {
 
 footer {
     text-align: center;
-    padding: 20px 0;
+    padding: 15px 0; /* Reduced padding */
     background-color: #1c1c1c;
     color: #f8f9fa;
     position: fixed;
     width: 100%;
     bottom: 0;
-    font-size: 16px;
-    box-shadow: 0 -10px 30px rgba(0, 0, 0, 0.8);
+    font-size: 12px; /* Reduced font size */
+    box-shadow: 0 -5px 15px rgba(0, 0, 0, 0.8);
 }
 
 footer p {
-    margin: 10px 0;
+    margin: 5px 0;
 }
 
 footer small {
@@ -194,8 +194,8 @@ footer small {
 }
 
 .instagram-icon {
-    width: 25px;
-    height: 25px;
+    width: 20px;   /* Reduced icon size */
+    height: 20px;
     vertical-align: middle;
     margin-left: 5px;
 }
@@ -233,6 +233,6 @@ footer small {
     }
     100% {
         opacity: 1;
-        box-shadow: 0 20px 50px rgba(255, 0, 128, 0.7);
+        box-shadow: 0 15px 40px rgba(255, 0, 128, 0.7);
     }
 }

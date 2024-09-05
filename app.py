@@ -1,13 +1,11 @@
-from flask import Flask, render_template, request, jsonify, send_from_directory, session
+from flask import Flask, render_template, request, jsonify, send_from_directory
 import os
 import fitz  # PyMuPDF
 from concurrent.futures import ProcessPoolExecutor
 from datetime import datetime
-import requests
 from college_data import DTE_CODE_TO_COLLEGE  # Importing the dictionary
 
 app = Flask(__name__)
-app.secret_key = 'super-secret-key'  # Set a secret key for sessions
 
 # Constants for folder paths
 FOLDER_PATH = "clg"
@@ -24,7 +22,7 @@ def log_search(query, results, region):
             print(f" - {result}")
     else:
         print("Results: No matches found.")
-    print("\n")
+    print("\n")  # Add an empty line for readability
 
 def search_pdf_for_string(pdf_path, search_string):
     """Searches for a string in a PDF file."""
@@ -46,6 +44,7 @@ def search_pdfs_in_folder(search_string, folder_path, max_workers=8):
             if filename.endswith('.pdf'):
                 file_path = os.path.join(folder_path, filename)
                 futures.append(executor.submit(search_pdf_for_string, file_path, search_string))
+
         for future in futures:
             result = future.result()
             if result:
@@ -58,17 +57,6 @@ def get_college_name_from_filename(filename):
     dte_code = filename.split('_')[-1].replace('.pdf', '')
     return DTE_CODE_TO_COLLEGE.get(dte_code, "Unknown College")
 
-def verify_captcha(response):
-    """Verifies the CAPTCHA response from the client."""
-    secret = '6LdHxTYqAAAAAK3qHhidLqX9YPrxR3MjYHJOqrtq'  # Replace with your actual reCAPTCHA secret key
-    payload = {
-        'secret': secret,
-        'response': response
-    }
-    captcha_response = requests.post("https://www.google.com/recaptcha/api/siteverify", data=payload)
-    result = captcha_response.json()
-    return result.get("success", False)
-
 @app.route('/')
 def index():
     return render_template('index.html')
@@ -78,21 +66,9 @@ def search_pdfs():
     data = request.json
     search_string = data.get('search_string')
     region = data.get('region')
-    captcha_response = data.get('captcha_response')
 
     if not search_string:
         return jsonify({"error": "search_string is required"}), 400
-
-    # Verify CAPTCHA
-    if 'search_count' not in session:
-        session['search_count'] = 0
-
-    if session['search_count'] < 10:
-        if not verify_captcha(captcha_response):
-            return jsonify({"error": "Invalid CAPTCHA. Please try again."}), 400
-        session['search_count'] += 1
-    else:
-        session['search_count'] = 0  # Reset after 10 successful searches
 
     # Determine which folder to search based on the selected region
     folder_path = FOLDER_PATH if region == "all_maharashtra" else FOLDER_PATH_MUMBAI
@@ -110,28 +86,9 @@ def search_pdfs():
 @app.route('/pdfs/<filename>')
 def serve_pdf(filename):
     """Serve a specific PDF file."""
+    # Determine the correct folder based on the file name
     folder_path = FOLDER_PATH if filename.startswith("CAPR-I") else FOLDER_PATH_MUMBAI
     return send_from_directory(folder_path, filename)
-
-# API endpoint to search for AppxID in PDFs
-@app.route('/api/search_pdf', methods=['POST'])
-def search_pdf():
-    data = request.json
-    appx_id = data.get('appx_id')
-    region = data.get('region', 'all_maharashtra')
-
-    if not appx_id:
-        return jsonify({"error": "AppxID is required"}), 400
-
-    # Determine which folder to search based on the selected region
-    folder_path = FOLDER_PATH if region == "all_maharashtra" else FOLDER_PATH_MUMBAI
-    found_pdfs = search_pdfs_in_folder(appx_id, folder_path)
-
-    if found_pdfs:
-        results = [{"filename": pdf, "college_name": get_college_name_from_filename(pdf)} for pdf in found_pdfs]
-        return jsonify({"found_pdfs": results})
-    else:
-        return jsonify({"message": "No matches found for the provided AppxID."})
 
 if __name__ == '__main__':
     app.run(debug=True)

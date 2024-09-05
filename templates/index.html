@@ -51,6 +51,12 @@
             const captchaResponse = grecaptcha.getResponse();  // Get the CAPTCHA response
             const region = document.querySelector('input[name="location"]:checked').value;
 
+            // Check if CAPTCHA is completed
+            if (!captchaResponse) {
+                alert("Please complete the CAPTCHA.");
+                return;
+            }
+
             const response = await fetch('/search_pdfs', {
                 method: 'POST',
                 headers: {
@@ -83,6 +89,9 @@
                 para.textContent = result.message || 'No results found.';
                 resultDiv.appendChild(para);
             }
+
+            // Reset CAPTCHA after search
+            grecaptcha.reset();
         });
     </script>
 </body>
